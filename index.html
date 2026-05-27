@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnóstico Digital — Natasha Mesquita</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #F7F7F7; --white: #FFFFFF; --forest: #222222;
+      --terra: #FF5A5F; --sand: #EBEBEB;
+      --text-dark: #222222; --text-mid: #484848; --text-light: #767676;
+      --para-bg: #FFF5F5; --para-border: #FF5A5F; --para-text: #C0392B;
+      --success-bg: #f0fdf4; --success-border: #bbf7d0;
+      --danger-bg: #fee2e2; --danger-border: #fca5a5;
+      --warn-bg: #fef9c3; --warn-border: #fde047;
+      --font: 'Nunito', 'Inter', system-ui, sans-serif;
+      --radius: 14px; --max-width: 860px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--cream); color: var(--text-dark); font-family: var(--font); font-size: 1rem; line-height: 1.6; }
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 2rem 1.5rem; }
+    h1 { font-size: 2.5rem; font-weight: 800; }
+    h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: .5rem; }
+    h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: .4rem; }
+    p { margin-bottom: 1rem; }
+    .section { padding: 3rem 0; border-bottom: 1px solid var(--sand); }
+    .section:last-of-type { border-bottom: none; }
+    .section-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: var(--terra); margin-bottom: .3rem; }
+    .section-sub { font-size: .9rem; color: var(--text-light); margin-bottom: 1.5rem; }
+    .badge { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .badge-danger { background: var(--danger-bg); color: #991b1b; border: 1px solid var(--danger-border); }
+    .badge-warn   { background: var(--warn-bg);   color: #854d0e; border: 1px solid var(--warn-border); }
+    .badge-ok     { background: var(--success-bg); color: #065f46; border: 1px solid var(--success-border); }
+    .badge-terra  { background: var(--terra); color: white; }
+    .badge-format { background: #e5e7eb; color: #374151; }
+    .badge-hook   { background: var(--sand); color: var(--forest); }
+    .para-entender { background: var(--para-bg); border-left: 3px solid var(--para-border); border-radius: 6px; padding: .75rem 1rem; font-size: .82rem; color: var(--para-text); margin: 1rem 0; line-height: 1.55; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .75rem; margin: 1.25rem 0; }
+    .stat-card { background: var(--white); border: 1px solid var(--sand); border-radius: var(--radius); padding: 1rem; text-align: center; }
+    .stat-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--forest); }
+    .stat-label { display: block; font-size: .7rem; color: var(--text-light); text-transform: uppercase; letter-spacing: .05em; margin-top: .2rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; margin: 1rem 0; }
+    thead th { text-align: left; padding: .6rem .875rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-light); border-bottom: 2px solid var(--sand); }
+    tbody td { padding: .6rem .875rem; border-bottom: 1px solid #f0e8de; vertical-align: top; }
+    tbody tr:nth-child(even) { background: var(--white); }
+    #solucao tbody tr { background: rgba(255,255,255,.05) !important; }
+    .img-missing { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; background: #f3ece3; border-radius: 8px; font-size: .75rem; color: var(--terra); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav id="main-nav" style="position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--sand);padding:.5rem 1.5rem;">
+  <div style="max-width:var(--max-width);margin:0 auto;display:flex;gap:.25rem;flex-wrap:wrap;">
+    <a href="#capa"        class="nav-pill" onclick="setActive(this)">Capa</a>
+    <a href="#estudamos"   class="nav-pill" onclick="setActive(this)">O que Estudamos</a>
+    <a href="#encontramos" class="nav-pill" onclick="setActive(this)">O que Encontramos</a>
+    <a href="#acontecendo" class="nav-pill" onclick="setActive(this)">O que Está Acontecendo</a>
+    <a href="#possivel"    class="nav-pill" onclick="setActive(this)">O que É Possível</a>
+    <a href="#solucao"     class="nav-pill" onclick="setActive(this)">A Solução</a>
+  </div>
+</nav>
+<style>
+  .nav-pill { padding:.3rem .875rem; border-radius:999px; font-size:.8rem; font-weight:600; color:var(--text-mid); text-decoration:none; transition:background .15s,color .15s; }
+  .nav-pill:hover,.nav-pill.active { background:var(--terra); color:white; }
+</style>
+
+<!-- SECTION 0: CAPA -->
+<section id="capa" class="section">
+  <div class="container" style="text-align:center;padding-top:3rem;padding-bottom:3rem;">
+    <p style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--terra);margin-bottom:1.5rem;">THE MARKETING BRAIN · Agência Bold</p>
+    <h1 style="color:var(--forest);margin-bottom:.4rem;">Natasha Mesquita</h1>
+    <p style="color:var(--text-mid);font-size:1rem;margin-bottom:.25rem;">Terapeuta Corporal Sistêmica e BodyTalk · Rio de Janeiro</p>
+    <p style="color:var(--text-light);font-size:.85rem;margin-bottom:2.5rem;">Diagnóstico Digital Completo · 2026-05-26</p>
+    <div style="display:inline-block;background:var(--forest);border-radius:var(--radius);padding:1.5rem 2.5rem;margin-bottom:1.5rem;">
+      <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sand);margin-bottom:.4rem;">Awareness Score</div>
+      <div style="font-size:4rem;font-weight:800;color:var(--terra);line-height:1;">2/10</div>
+      <div style="font-size:.75rem;color:var(--sand);margin-top:.3rem;">de 10 possíveis</div>
+    </div>
+    <p style="font-style:italic;color:var(--text-mid);font-size:1rem;max-width:520px;margin:0 auto 2.5rem;">
+      "A força está lá. O problema é que quase ninguém a encontra ainda."
+    </p>
+    <div style="display:flex;gap:.35rem;flex-wrap:wrap;justify-content:center;">
+      <a href="#estudamos"   class="nav-pill" style="border:1px solid var(--sand);">O que Estudamos</a>
+      <a href="#encontramos" class="nav-pill" style="border:1px solid var(--sand);">O que Encontramos</a>
+      <a href="#acontecendo" class="nav-pill" style="border:1px solid var(--sand);">O que Está Acontecendo</a>
+      <a href="#possivel"    class="nav-pill" style="border:1px solid var(--sand);">O que É Possível</a>
+      <a href="#solucao"     class="nav-pill" style="border:1px solid var(--sand);background:var(--terra);color:white;">A Solução</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: O QUE ESTUDAMOS -->
+<section id="estudamos" class="section">
+  <div class="container">
+    <div class="section-label">Seção 1</div>
+    <h2>O que Estudamos</h2>
+    <p class="section-sub">What We Analyzed</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.875rem;margin:1.5rem 0;">
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:.4rem;">📸</div>
+        <div style="font-weight:700;font-size:1.25rem;color:var(--forest);">30</div>
+        <div style="font-size:.78rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em;">Posts do Instagram</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:.4rem;">💬</div>
+        <div style="font-weight:700;font-size:1.25rem;color:var(--forest);">54+</div>
+        <div style="font-size:.78rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em;">Vozes Coletadas</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:.4rem;">🌐</div>
+        <div style="font-weight:700;font-size:1.25rem;color:var(--forest);">7</div>
+        <div style="font-size:.78rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em;">Canais Auditados</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:.4rem;">🔎</div>
+        <div style="font-weight:700;font-size:1.25rem;color:var(--forest);">3</div>
+        <div style="font-size:.78rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em;">Concorrentes Estudados</div>
+      </div>
+    </div>
+    <div class="para-entender">
+      💡 <strong>Para entender:</strong> Antes de propor qualquer ação, estudamos tudo que existe sobre a sua presença digital: o que sua audiência faz, o que seus concorrentes postam, e como as pessoas encontram — ou não encontram — você na internet. Este documento é o resultado desse estudo.
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: O QUE ENCONTRAMOS -->
+<section id="encontramos" class="section">
+  <div class="container">
+    <div class="section-label">Seção 2</div>
+    <h2>O que Encontramos</h2>
+    <p class="section-sub">Findings</p>
+    <div id="exame-tabs" style="display:flex;gap:.25rem;flex-wrap:wrap;margin-bottom:1.75rem;border-bottom:2px solid var(--sand);padding-bottom:.5rem;">
+      <button class="etab-btn etab-active" onclick="showExame('perfil',this)">Seu Perfil</button>
+      <button class="etab-btn" onclick="showExame('audiencia',this)">Sua Audiência</button>
+      <button class="etab-btn" onclick="showExame('concorrentes',this)">Concorrentes</button>
+      <button class="etab-btn" onclick="showExame('visibilidade',this)">Visibilidade</button>
+    </div>
+    <style>
+      .etab-btn { background:none; border:none; padding:.4rem .875rem; font-size:.85rem; font-weight:600; color:var(--text-mid); cursor:pointer; border-radius:999px; }
+      .etab-btn:hover,.etab-btn.etab-active { background:var(--terra); color:white; }
+      .etab-panel { display:none; }
+      .etab-panel.etab-visible { display:block; }
+    </style>
+
+    <!-- TAB: Seu Perfil -->
+    <div id="tab-perfil" class="etab-panel etab-visible">
+      <div class="stat-grid">
+        <div class="stat-card"><span class="stat-val">30</span><span class="stat-label">Posts analisados</span></div>
+        <div class="stat-card"><span class="stat-val">1.381</span><span class="stat-label">Seguidores</span></div>
+        <div class="stat-card"><span class="stat-val">~28</span><span class="stat-label">Média de likes</span></div>
+        <div class="stat-card"><span class="stat-val">2,4%</span><span class="stat-label">Engajamento</span></div>
+        <div class="stat-card"><span class="stat-val">Reel</span><span class="stat-label">Melhor formato</span></div>
+        <div class="stat-card"><span class="stat-val">Statement</span><span class="stat-label">Melhor hook</span></div>
+      </div>
+
+      <h3 style="margin:1.5rem 0 .75rem;">Seus posts com mais curtidas</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;">
+
+        <a href="https://www.instagram.com/p/DPv0UNVkQwl/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank01.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 96 · 💬 22</span>
+            <span class="badge badge-format">Carrossel</span>
+            <span class="badge badge-hook">Statement hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DN3yQvrYrvP/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank02.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 94 · 💬 11</span>
+            <span class="badge badge-format">Reel</span>
+            <span class="badge badge-hook">Pain hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DM8YXTDvEgg/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank03.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 87 · 💬 40</span>
+            <span class="badge badge-format">Reel</span>
+            <span class="badge badge-hook">Statement hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DWZWM2AE1iI/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank04.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 76 · 💬 31</span>
+            <span class="badge badge-format">Reel</span>
+            <span class="badge badge-hook">Credencial hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DXMk114EX72/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank05.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 70 · 💬 10</span>
+            <span class="badge badge-format">Carrossel</span>
+            <span class="badge badge-hook">Statement hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DL2dQNhuk7z/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank06.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 37 · 💬 4</span>
+            <span class="badge badge-format">Static</span>
+            <span class="badge badge-hook">Pain hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DWm3VLAkw3H/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank07.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 28 · 💬 3</span>
+            <span class="badge badge-format">Reel</span>
+            <span class="badge badge-hook">Credencial hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DNleBPtubnu/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank08.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 27 · 💬 5</span>
+            <span class="badge badge-format">Reel</span>
+            <span class="badge badge-hook">Pain hook</span>
+          </div>
+        </a>
+
+        <a href="https://www.instagram.com/p/DXFfau0E8o0/" target="_blank" style="text-decoration:none;color:inherit;">
+          <img src="../../brand_assets/images/instagram/mesquitanatasha_rank09.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block;">
+          <div style="display:flex;gap:.3rem;flex-wrap:wrap;padding:.4rem 0;align-items:center;">
+            <span style="font-size:.72rem;color:var(--text-mid);">❤️ 23 · 💬 3</span>
+            <span class="badge badge-format">Reel</span>
+            <span class="badge badge-hook">Credencial hook</span>
+          </div>
+        </a>
+
+      </div>
+
+      <h3 style="margin:1.5rem 0 .75rem;">Performance por tipo de abertura (hook)</h3>
+      <table>
+        <thead><tr><th>Tipo de Hook</th><th>Média de Likes</th></tr></thead>
+        <tbody>
+          <tr><td>Statement hook</td><td>58</td></tr>
+          <tr><td>Pain hook</td><td>51</td></tr>
+          <tr><td>Credencial hook</td><td>~42</td></tr>
+        </tbody>
+      </table>
+
+      <div class="para-entender">
+        💡 <strong>Para entender os tipos de abertura:</strong> <strong>Statement hook</strong> é uma afirmação que provoca reflexão — ex.: "O seu corpo lembra de tudo que você tentou esquecer." <strong>Pain hook</strong> começa com a dor da pessoa — ex.: "Você já foi a vários médicos e ainda não tem resposta?" <strong>Credencial hook</strong> usa a sua autoridade — ex.: "Há 30 anos trabalho com o sistema BodyTalk." Dos três, o Statement hook gera a maior média de curtidas nos posts da Natasha.
+      </div>
+
+      <h3 style="margin:1.5rem 0 .75rem;">Performance por formato</h3>
+      <table>
+        <thead><tr><th>Formato</th><th>Média de Likes</th><th>% do mix</th></tr></thead>
+        <tbody>
+          <tr><td>Video (Reel)</td><td>33</td><td>47%</td></tr>
+          <tr><td>Carrossel</td><td>26</td><td>30%</td></tr>
+          <tr><td>Imagem estática</td><td>10</td><td>23%</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin:1.5rem 0 .75rem;">Melhores horários para postar</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;">
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="font-weight:700;color:var(--forest);">Segunda — manhã</div>
+          <div style="font-size:.8rem;color:var(--text-mid);">avg 118 engajamento</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="font-weight:700;color:var(--forest);">Sexta — tarde</div>
+          <div style="font-size:.8rem;color:var(--text-mid);">avg 107 engajamento</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="font-weight:700;color:var(--forest);">Quarta — noite</div>
+          <div style="font-size:.8rem;color:var(--text-mid);">avg 41 engajamento (slot mais consistente)</div>
+        </div>
+      </div>
+
+      <div class="para-entender">
+        💡 <strong>Para entender:</strong> Hook é a primeira coisa que aparece no seu post — a frase ou imagem que faz alguém parar de rolar o feed. Seus melhores hooks são os que mais geram curtidas. A taxa de engajamento de 2,4% mostra que sua audiência interage de verdade — o problema não é qualidade, é volume de pessoas que chegam até o conteúdo.
+      </div>
+    </div>
+    <!-- END TAB: Seu Perfil -->
+
+    <!-- TAB: Sua Audiência -->
+    <div id="tab-audiencia" class="etab-panel">
+
+      <div style="background:var(--forest);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.75rem;text-align:center;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--terra);margin-bottom:.5rem;">Prova de conversão real — comentário no Instagram</div>
+        <p style="font-size:1.1rem;font-style:italic;color:var(--white);margin-bottom:.4rem;">"Hoje fiz aula experimental e gostei muito. Matriculada!!!"</p>
+        <p style="font-size:.78rem;color:var(--sand);">O funil funciona quando o caminho é claro. Quem te encontra, converte.</p>
+      </div>
+
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);border-bottom:1px solid var(--sand);padding-bottom:.4rem;margin-bottom:.875rem;">Dores que sua audiência traz</div>
+        <div style="display:grid;gap:.6rem;">
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Eu preciso de ajuda com minhas dores emocionais</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Preciso de bem estar físico e não sei mais o que fazer</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">A medicina convencional não consegue me ajudar</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Preciso de ajuda para mudar hábitos que não identifico por que persistem</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Eu tô sem sentido na vida</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);border-bottom:1px solid var(--sand);padding-bottom:.4rem;margin-bottom:.875rem;">O que eles desejam</div>
+        <div style="display:grid;gap:.6rem;">
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">atendimento totalmente personalizado e único</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Mais entrada de pacientes e/ou alunos pagando o valor cheio e seguindo o acompanhamento</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">mais clientes em atendimento contínuo</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">quero se formar num sistema de saúde integrativa, mudar de carreira, complementar minha assistência já sendo da área da saúde</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);border-bottom:1px solid var(--sand);padding-bottom:.4rem;margin-bottom:.875rem;">Resultados que eles já observam</div>
+        <div style="display:grid;gap:.6rem;">
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">O pouco que fiz (ações têm pouco tempo) já reverte com um tanto de interesse!!</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">benefícios de saúde física, emocional e relacional</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">recursos para o auto cuidado no gerenciamento de estresse</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);border-bottom:1px solid var(--sand);padding-bottom:.4rem;margin-bottom:.875rem;">Como Natasha descreve o próprio trabalho</div>
+        <div style="display:grid;gap:.6rem;">
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Ajudo pessoas trazendo à elas benefícios de saúde física, emocional e relacional, ainda oferecendo recursos para o auto cuidado no gerenciamento de estresse.</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">30 anos de investigação por três âmbitos terapêuticos mais o campo artístico/expressivo percorrido com louvores</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Única no país a ministrar aulas de formação num sistema de saúde específico para formar terapeutas</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Não quero parecer arrogante e dona da verdade. Não quero parecer como alguém que quer vender solução mágica.</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);border-bottom:1px solid var(--sand);padding-bottom:.4rem;margin-bottom:.875rem;">O que dizem nos comentários do Instagram</div>
+        <div style="display:grid;gap:.6rem;">
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Super Nat!! Um privilégio enorme a nossa parceria! Você é luz!!</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">Singelamente lindo ❤️</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">lindo demais... ainda é... ❤️</span>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:1.5rem;color:var(--terra);line-height:0;vertical-align:-.4rem;margin-right:.3rem;">"</span>
+            <span style="font-size:.9rem;color:var(--forest);">ta ficando cada vez mais jovem.... muito bem</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.75rem;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);border-bottom:1px solid var(--sand);padding-bottom:.4rem;margin-bottom:.875rem;">Dúvidas que o público traz</div>
+        <div style="display:grid;gap:.6rem;">
+          <div style="background:var(--warn-bg);border-left:3px solid var(--warn-border);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:.9rem;color:#78350f;">O que é o BodyTalk? Como você pode me dar assistência com seu acompanhamento terapêutico completo?</span>
+          </div>
+          <div style="background:var(--warn-bg);border-left:3px solid var(--warn-border);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:.9rem;color:#78350f;">Boa noite! Valor por favor</span>
+          </div>
+          <div style="background:var(--warn-bg);border-left:3px solid var(--warn-border);border-radius:10px;padding:.875rem 1rem;">
+            <span style="font-size:.9rem;color:#78350f;">Meu público ainda não entende o que é o Sistema BodyTalk, nem cada serviço que dele deriva</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="para-entender">
+        💡 <strong>Para entender:</strong> Essas são as palavras que as pessoas já usam para descrever a dor delas e o que querem de você. Quando usamos essas mesmas palavras no conteúdo — em vez de termos técnicos — o post parece que foi escrito especificamente para aquela pessoa. A lista de "dúvidas que o público traz" é especialmente valiosa: há interesse real, mas falta a explicação certa para converter esse interesse em agendamento.
+      </div>
+    </div>
+    <!-- END TAB: Sua Audiência -->
+
+    <!-- TAB: Concorrentes -->
+    <div id="tab-concorrentes" class="etab-panel">
+
+      <!-- Competitor 01: zoedorey — 120x -->
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;">
+        <div style="background:var(--forest);padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);">Concorrente 01</div>
+            <div style="color:var(--white);font-weight:700;font-size:1rem;">@zoedorey</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:2rem;font-weight:800;color:var(--terra);line-height:1;">120×</div>
+            <div style="font-size:.65rem;color:var(--sand);text-transform:uppercase;letter-spacing:.05em;">mais engajamento</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:var(--sand);">
+          <a href="https://www.instagram.com/p/DUWKLdrCAGN/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_zoedorey_rank01.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+          <a href="https://www.instagram.com/p/DU5Z6mkiE63/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_zoedorey_rank02.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+          <a href="https://www.instagram.com/p/DYubdk6g3qv/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_zoedorey_rank03.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+        </div>
+        <div style="display:flex;gap:1.5rem;padding:.875rem 1.25rem;border-bottom:1px solid var(--sand);">
+          <div><div style="font-size:.65rem;color:var(--text-light);text-transform:uppercase;">Followers</div><div style="font-weight:700;">284k</div></div>
+          <div><div style="font-size:.65rem;color:var(--text-light);text-transform:uppercase;">Média de Likes</div><div style="font-weight:700;">4.036</div></div>
+          <div><div style="font-size:.65rem;color:var(--text-light);text-transform:uppercase;">Melhor Formato</div><div style="font-weight:700;">Carrossel</div></div>
+        </div>
+        <div style="margin:.875rem 1.25rem;background:var(--para-bg);border-left:3px solid var(--para-border);border-radius:6px;padding:.625rem .875rem;font-size:.75rem;color:var(--para-text);">
+          💡 <strong>Para entender:</strong> "120× mais engajamento" significa que para cada curtida que Natasha recebe, essa conta recebe 120. Como se você atendesse 10 pacientes por mês e ela atendesse 1.200. A diferença não é de qualidade de trabalho — é de visibilidade.
+        </div>
+      </div>
+
+      <!-- Competitor 02: victormoreira.corpo — 15x -->
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;">
+        <div style="background:#3d4f3d;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);">Concorrente 02</div>
+            <div style="color:var(--white);font-weight:700;font-size:1rem;">@victormoreira.corpo</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:2rem;font-weight:800;color:var(--terra);line-height:1;">15×</div>
+            <div style="font-size:.65rem;color:var(--sand);text-transform:uppercase;letter-spacing:.05em;">mais engajamento</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:var(--sand);">
+          <a href="https://www.instagram.com/p/DYo_WEclvJ4/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_victormoreira.corpo_rank01.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+          <a href="https://www.instagram.com/p/DYrftnVkiu_/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_victormoreira.corpo_rank02.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+          <a href="https://www.instagram.com/p/DYwqZhqDFLZ/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_victormoreira.corpo_rank03.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+        </div>
+        <div style="display:flex;gap:1.5rem;padding:.875rem 1.25rem;">
+          <div><div style="font-size:.65rem;color:var(--text-light);text-transform:uppercase;">Followers</div><div style="font-weight:700;">38k</div></div>
+          <div><div style="font-size:.65rem;color:var(--text-light);text-transform:uppercase;">Média de Likes</div><div style="font-weight:700;">492</div></div>
+          <div><div style="font-size:.65rem;color:var(--text-light);text-transform:uppercase;">Melhor Formato</div><div style="font-weight:700;">Carrossel</div></div>
+        </div>
+      </div>
+
+      <!-- Competitor 03: cris.saudenaorigem — 3x (nearest) -->
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;">
+        <div style="background:#4a5e4a;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);">Concorrente 03 — Referência mais próxima</div>
+            <div style="color:var(--white);font-weight:700;font-size:1rem;">@cris.saudenaorigem</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:2rem;font-weight:800;color:#9FE870;line-height:1;">3×</div>
+            <div style="font-size:.65rem;color:var(--sand);text-transform:uppercase;letter-spacing:.05em;">mais engajamento</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:var(--sand);">
+          <a href="https://www.instagram.com/p/DL-169CulUw/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_cris.saudenaorigem_rank01.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+          <a href="https://www.instagram.com/p/DYzKBXlxGVp/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_cris.saudenaorigem_rank02.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+          <a href="https://www.instagram.com/p/DWl8cVUEV9i/" target="_blank">
+            <img src="../../brand_assets/images/instagram/comp_cris.saudenaorigem_rank03.jpg" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block;">
+          </a>
+        </div>
+        <div style="padding:.875rem 1.25rem;font-size:.8rem;color:var(--text-dark);background:var(--success-bg);border-top:1px solid var(--success-border);">
+          ✅ <strong>Referência alcançável:</strong> Esta é a conta com perfil mais similar ao da Natasha — mesmo nicho de saúde integrativa. A diferença de 3× é recuperável em 3–6 meses com consistência de conteúdo.
+        </div>
+      </div>
+
+      <div style="background:var(--terra);border-radius:var(--radius);padding:1.25rem;margin-top:1.5rem;">
+        <p style="color:var(--white);margin:0;font-size:.9rem;">
+          📌 <strong>Natasha tem mais credenciais que todos os concorrentes acima.</strong> 30 anos de investigação terapêutica, única instrutora BodyTalk no Brasil, certificação avançada internacional (1 de 6 no país), método próprio de acompanhamento. A diferença não é de capacidade — é de comunicação e visibilidade.
+        </p>
+      </div>
+    </div>
+    <!-- END TAB: Concorrentes -->
+
+    <!-- TAB: Visibilidade -->
+    <div id="tab-visibilidade" class="etab-panel">
+      <div class="stat-grid" style="margin-bottom:1.5rem;">
+        <div class="stat-card" style="border-left:4px solid var(--danger-border);">
+          <span class="stat-val" style="color:#991b1b;">3<span style="font-size:1rem;font-weight:400;">/10</span></span>
+          <span class="stat-label">Presença Digital Geral</span>
+        </div>
+        <div class="stat-card" style="border-left:4px solid var(--warn-border);">
+          <span class="stat-val" style="color:#854d0e;">5<span style="font-size:1rem;font-weight:400;">/10</span></span>
+          <span class="stat-label">Instagram</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.75rem;">
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+            <span style="font-weight:600;color:var(--forest);font-size:.9rem;">Google Business Profile</span>
+            <span class="badge badge-danger">Ausente</span>
+          </div>
+          <p style="font-size:.82rem;color:var(--text-mid);margin:0;">Nenhuma ficha no Google Maps para terapeuta presencial em RJ — invisível para buscas locais de alta intenção.</p>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+            <span style="font-weight:600;color:var(--forest);font-size:.9rem;">Doctoralia / Vittude</span>
+            <span class="badge badge-danger">Não verificado</span>
+          </div>
+          <p style="font-size:.82rem;color:var(--text-mid);margin:0;">Portais de saúde com alta autoridade de SEO — profissionais listados aparecem em buscas de intenção alta e no Google AI Overview.</p>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+            <span style="font-weight:600;color:var(--forest);font-size:.9rem;">SEO orgânico</span>
+            <span class="badge badge-danger">Invisível</span>
+          </div>
+          <p style="font-size:.82rem;color:var(--text-mid);margin:0;">Domain authority abaixo do threshold de indexação. "Terapeuta corporal Rio de Janeiro" não retorna Natasha na primeira página.</p>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+            <span style="font-weight:600;color:var(--forest);font-size:.9rem;">Email / Captura de leads</span>
+            <span class="badge badge-danger">Ausente</span>
+          </div>
+          <p style="font-size:.82rem;color:var(--text-mid);margin:0;">Sem newsletter, sem lead magnet, sem lista. Interessados que não convertem imediatamente são perdidos para sempre.</p>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+            <span style="font-weight:600;color:var(--forest);font-size:.9rem;">Instagram</span>
+            <span class="badge badge-warn">Existe — fraco</span>
+          </div>
+          <p style="font-size:.82rem;color:var(--text-mid);margin:0;">Canal ativo com engajamento real, mas sem CTA, sem hashtags, sem prova social fixada. Confusão de marca Pilates/BodyTalk dilui o posicionamento.</p>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+            <span style="font-weight:600;color:var(--forest);font-size:.9rem;">Website</span>
+            <span class="badge badge-warn">Existe — subposicionado</span>
+          </div>
+          <p style="font-size:.82rem;color:var(--text-mid);margin:0;">11 páginas existem, mas a linguagem é introspectiva e pode ser inacessível para quem nunca ouviu falar em BodyTalk. Sem CTA claro de agendamento.</p>
+        </div>
+      </div>
+
+      <div class="para-entender" style="margin-top:1.25rem;">
+        💡 <strong>Para entender os termos desta seção:</strong> <strong>SEO orgânico</strong> é a capacidade de aparecer nas buscas do Google sem pagar anúncio — quando alguém digita "terapeuta corporal Rio de Janeiro", você deveria aparecer. <strong>Domain authority</strong> é a "nota de reputação" que o Google atribui ao seu site — quanto mais baixa, mais longe da primeira página você fica. <strong>CTA</strong> (chamada para ação) é a frase que diz ao leitor o próximo passo — "Me manda DM", "Clique no link da bio". <strong>Lead magnet</strong> (isca digital) é um material gratuito — e-book, guia, vídeo — que você oferece em troca do contato da pessoa.
+      </div>
+
+      <div class="para-entender" style="margin-top:1.25rem;">
+        💡 <strong>Para entender:</strong> "Presença digital" é o conjunto de todos os lugares onde você existe online — Instagram, Google, LinkedIn, portais de saúde, etc. Uma pontuação de 3/10 significa que quando alguém te pesquisa em qualquer um desses canais, quase não te encontra. O Instagram é onde está a maior oportunidade imediata — já existe audiência, já existe engajamento, falta volume e consistência.
+      </div>
+    </div>
+    <!-- END TAB: Visibilidade -->
+
+  </div>
+</section>
+
+<!-- SECTION 3: O QUE ESTÁ ACONTECENDO -->
+<section id="acontecendo" class="section">
+  <div class="container">
+    <div class="section-label">Seção 3</div>
+    <h2>O que Está Acontecendo</h2>
+    <p class="section-sub">The Core Finding</p>
+
+    <div style="background:var(--forest);border-radius:var(--radius);padding:2rem;text-align:center;margin-bottom:1.75rem;">
+      <p style="font-style:italic;font-size:1.15rem;color:var(--white);margin:0;">
+        "Quem te encontra, fica. O problema é que quase ninguém te encontra."
+      </p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.75rem;">
+      <div style="background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#991b1b;margin-bottom:.4rem;">Awareness</div>
+        <div style="font-size:2.5rem;font-weight:800;color:#991b1b;">2/10</div>
+        <div style="font-size:.82rem;color:#7f1d1d;margin-top:.4rem;">Pouquíssimas pessoas novas te descobrem</div>
+      </div>
+      <div style="background:var(--success-bg);border:1px solid var(--success-border);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#065f46;margin-bottom:.4rem;">Referral</div>
+        <div style="font-size:2.5rem;font-weight:800;color:#065f46;">5/10</div>
+        <div style="font-size:.82rem;color:#14532d;margin-top:.4rem;">Quem te conhece, indica. A lealdade já existe.</div>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:1rem;">O caminho atual de uma nova pessoa que busca terapia</h3>
+    <div style="display:flex;flex-direction:column;gap:.4rem;max-width:560px;">
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-weight:600;font-size:.9rem;">Descoberta</div>
+          <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Pesquisa "terapeuta integrativa Rio de Janeiro" ou "BodyTalk RJ"</div>
+        </div>
+        <span class="badge badge-danger" style="white-space:nowrap;margin-left:.75rem;">Bloqueio crítico</span>
+      </div>
+      <div style="text-align:center;color:var(--text-light);font-size:.9rem;">↓</div>
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-weight:600;font-size:.9rem;">Visita ao Perfil</div>
+          <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Instagram ou site — Bio não explica BodyTalk, sem CTA, sem prova social</div>
+        </div>
+        <span class="badge badge-warn" style="white-space:nowrap;margin-left:.75rem;">Canal subutilizado</span>
+      </div>
+      <div style="text-align:center;color:var(--text-light);font-size:.9rem;">↓</div>
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-weight:600;font-size:.9rem;">Conversão</div>
+          <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">WhatsApp, DM, agendamento — funciona quando a pessoa chega até aqui</div>
+        </div>
+        <span class="badge badge-ok" style="white-space:nowrap;margin-left:.75rem;">Ativo — manter</span>
+      </div>
+      <div style="text-align:center;color:var(--text-light);font-size:.9rem;">↓</div>
+      <div style="background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-weight:600;font-size:.9rem;">Retenção / Indicação</div>
+          <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Clientes fidelizados que indicam. "Você é luz!!" — a lealdade já existe.</div>
+        </div>
+        <span class="badge badge-ok" style="white-space:nowrap;margin-left:.75rem;">Ativo — manter</span>
+      </div>
+    </div>
+
+    <div class="para-entender" style="margin-top:1.5rem;">
+      💡 <strong>Para entender:</strong> Um funil é o caminho que uma pessoa percorre desde "nunca ouvi falar" até "sou cliente fiel". O que encontramos mostra um funil com um problema específico no topo: a entrada está bloqueada. A saída — retenção e indicação — está funcionando bem acima da média. Isso é ótimo: o problema é de visibilidade, não de qualidade.
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: O QUE É POSSÍVEL -->
+<section id="possivel" class="section">
+  <div class="container">
+    <div class="section-label">Seção 4</div>
+    <h2>O que É Possível</h2>
+    <p class="section-sub">What's Possible</p>
+
+    <div style="background:var(--forest);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.75rem;">
+      <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--terra);margin-bottom:.5rem;">North Star — O objetivo que guia tudo</div>
+      <p style="color:var(--white);font-size:1rem;font-weight:700;margin-bottom:1rem;">Novos clientes em atendimento contínuo por mês, pagando o valor cheio</p>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <span class="badge" style="background:#4a6249;color:var(--sand);">Hoje: est. 1–2/mês</span>
+        <span class="badge" style="background:#4a6249;color:var(--sand);">30 dias: 3–4/mês</span>
+        <span class="badge badge-terra">90 dias: 6–8/mês</span>
+      </div>
+    </div>
+
+    <div class="para-entender">
+      💡 <strong>Para entender:</strong> <strong>North Star</strong> (estrela-guia) é a métrica principal que orienta todas as decisões — a única coisa que, se crescer, significa que o negócio está indo bem. <strong>NSM</strong> é apenas a abreviação de "North Star Metric". Para a Natasha, essa métrica é: novos clientes em atendimento contínuo por mês, pagando o valor cheio.
+    </div>
+
+    <h3 style="margin-bottom:.75rem;">Metas para os próximos 90 dias</h3>
+    <table>
+      <thead><tr><th>Métrica</th><th>Hoje</th><th>30 dias</th><th>90 dias</th></tr></thead>
+      <tbody>
+        <tr><td>Novos clientes/mês (NSM)</td><td>est. 1–2</td><td>3–4</td><td>6–8</td></tr>
+        <tr><td>Seguidores Instagram</td><td>1.381</td><td>1.600</td><td>2.200+</td></tr>
+        <tr><td>Avg likes/post</td><td>~28</td><td>40+</td><td>60+</td></tr>
+        <tr><td>DMs recebidos/semana</td><td>?</td><td>5+</td><td>15+</td></tr>
+        <tr><td>Contatos WhatsApp list</td><td>0 (formalizado)</td><td>50</td><td>200</td></tr>
+        <tr><td>GBP views/mês</td><td>0</td><td>200+</td><td>500+</td></tr>
+        <tr><td>Google reviews</td><td>0</td><td>5</td><td>20</td></tr>
+        <tr><td>Portais ativos</td><td>0</td><td>2 (Doctoralia + Vittude)</td><td>3 (+ INPACS)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="para-entender">
+      💡 <strong>Para entender as métricas acima:</strong> <strong>Avg likes/post</strong> é a média de curtidas por publicação — indica o quanto o conteúdo ressoa com quem já te segue. <strong>GBP views/mês</strong> são as visualizações mensais no Google Business Profile (ficha do Google Maps) — o número de pessoas que encontraram a Natasha em uma busca local no Google.
+    </div>
+
+    <h3 style="margin:1.5rem 0 .75rem;">As ações priorizadas — o que fazer e em que ordem</h3>
+    <table>
+      <thead><tr><th>#</th><th>P</th><th>Ação</th><th>O que ela faz</th><th>Score</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;">1</td>
+          <td>🔴</td>
+          <td style="font-weight:600;">Criar Google Business Profile</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">Aparece em "terapeuta Rio de Janeiro" no Maps — descoberta local de alta intenção</td>
+          <td style="font-weight:700;color:var(--forest);">8.7</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">2</td>
+          <td>🔴</td>
+          <td style="font-weight:600;">Reescrever Bio do Instagram</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">"O que faço + Para quem + CTA WhatsApp" — converte visitantes novos em DMs</td>
+          <td style="font-weight:700;color:var(--forest);">8.7</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">3</td>
+          <td>🔴</td>
+          <td style="font-weight:600;">Adicionar CTA em todo post</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">Captura intenção já demonstrada — "Valor por favor", "Querooooo" precisam de direção</td>
+          <td style="font-weight:700;color:var(--forest);">8.3</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">4</td>
+          <td>🟡</td>
+          <td style="font-weight:600;">Criar Lista de Transmissão WhatsApp</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">70–85% open rate vs. 20% email — canal com maior conversão no Brasil</td>
+          <td style="font-weight:700;color:var(--forest);">7.7</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">5</td>
+          <td>🟡</td>
+          <td style="font-weight:600;">Fixar 3 posts de prova social</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">Depoimento + resultado + credenciais — trust page para visitantes novos</td>
+          <td style="font-weight:700;color:var(--forest);">7.7</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">6</td>
+          <td>🟡</td>
+          <td style="font-weight:600;">Cadastrar no Doctoralia e Vittude</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">Portais de alta autoridade — aparecem em buscas de intenção alta + Google AI Overview</td>
+          <td style="font-weight:700;color:var(--forest);">7.3</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">7</td>
+          <td>🟡</td>
+          <td style="font-weight:600;">Série de Reels: "O que é BodyTalk?"</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">3 episódios que ensinam o método — elimina a confusão de marca e atrai público qualificado</td>
+          <td style="font-weight:700;color:var(--forest);">7.0</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">8</td>
+          <td>🟡</td>
+          <td style="font-weight:600;">Boostar post de Mat Pilates com Meta Ads</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">Post que já converteu organicamente ("Matriculada!!!") — amplificar resultado comprovado</td>
+          <td style="font-weight:700;color:var(--forest);">7.0</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">9</td>
+          <td>🟡</td>
+          <td style="font-weight:600;">Cadastrar no INPACS (BodyTalk Association)</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">Diretório oficial da IBA — cria reconhecimento em IA para "instrutora BodyTalk Brasil"</td>
+          <td style="font-weight:700;color:var(--forest);">7.0</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">10</td>
+          <td>🟢</td>
+          <td style="font-weight:600;">Criar sessão experimental de BodyTalk</td>
+          <td style="font-size:.82rem;color:var(--text-mid);">Oferta de entrada que reduz barreira — converte para acompanhamento contínuo como o Pilates já faz</td>
+          <td style="font-weight:700;color:var(--forest);">6.3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="para-entender">
+      💡 <strong>Para entender os termos desta tabela:</strong> <strong>ICE Score</strong> é uma nota de prioridade calculada em três critérios — Impacto (quão grande é o resultado esperado), Confiança (quão certo estamos de que vai funcionar) e Facilidade (quão fácil é de executar agora). Quanto maior a nota, mais a ação deve vir primeiro. <strong>Open rate</strong> é a taxa de abertura de mensagens — o percentual de pessoas que abriram a mensagem enviada (no WhatsApp, esse número chega a 70–85%; no e-mail, fica em torno de 20%). <strong>Trust page</strong> é uma "página de credibilidade" — posts fixados ou página do site que reúne depoimentos, resultados e qualificações para quem está te conhecendo pela primeira vez. <strong>Meta Ads</strong> são anúncios pagos no Instagram e Facebook gerenciados pela plataforma Meta — você escolhe o público, o orçamento e amplifica um post que já funcionou organicamente.
+    </div>
+
+    <h3 style="margin:1.5rem 0 .75rem;">O plano de 90 dias</h3>
+
+    <div style="margin-bottom:1.25rem;">
+      <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:.5rem;">Fase 1 — Fundações (Semanas 1–2)</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;">
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">1</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Criar Google Business Profile</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Categoria: Terapeuta Alternativa. Fotos profissionais, horários, todas as certificações, reviews dos primeiros 10 clientes.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">2</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Reescrever bio do Instagram</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">"Terapeuta BodyTalk | Reintegração personalizada para quem esgotou as soluções convencionais | Única Instrutora no Brasil 🇧🇷 | ↓ Me chame no WhatsApp"</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">3</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Adicionar CTA em todo post daqui em diante</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Rotacionar: "Me manda DM" / "Link na bio" / "Comenta aqui". Nenhum post sem ponto de ação.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">4</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Fixar 3 posts de prova social no topo do perfil</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Post 1: depoimento em vídeo de cliente. Post 2: screenshot WhatsApp de resultado. Post 3: credenciais visuais (certificado, formação).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.25rem;">
+      <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:.5rem;">Fase 2 — Distribuição (Semanas 3–6)</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;">
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">5</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Cadastrar no Doctoralia e Vittude</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Perfil completo: foto profissional, especialidades (BodyTalk, BAT, terapia corporal sistêmica), localização Tijuca/RJ, planos e preços.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">6</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Criar lista de transmissão WhatsApp Business</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Coletar contatos de clientes atuais, ex-clientes, leads do DM. Sequência de boas-vindas (3 mensagens/7 dias) + broadcast quinzenal.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">7</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Série de Reels: "O que é BodyTalk?" — 3 episódios</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Ep.1: "Por que seu corpo sente coisas que sua mente não entende?" · Ep.2: "Como funciona uma sessão — ao vivo." · Ep.3: "Por que me tornei instrutora?"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.25rem;">
+      <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin-bottom:.5rem;">Fase 3 — Monetização e Escala (Meses 2–3)</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;">
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">8</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Criar Layer 1 — Oferta de entrada digital</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">E-book gratuito "O Guia do Iniciante em BodyTalk" como lead magnet (captura WhatsApp). Mês 2: mini-masterclass a R$27–47 (Hotmart/Kiwify, PIX).</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">9</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Reposicionar Percurso Reintegração como Premium</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Comunicar limitação de vagas, elevar preço para refletir a credencial única. Criar página dedicada no site.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start;background:var(--white);border:1px solid var(--sand);border-radius:10px;padding:.875rem;">
+          <div style="background:var(--terra);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;">10</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">Primeiro contato corporativo B2B</div>
+            <div style="font-size:.8rem;color:var(--text-mid);margin-top:.2rem;">Mapear 3–5 empresas onde Natasha já tem contato. Propor workshop piloto "Gestão de Estresse com BodyTalk". Ticket: R$500–2.000/sessão de grupo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="para-entender">
+      💡 <strong>Para entender os termos da Fase 3:</strong> <strong>Layer 1</strong> (primeiro degrau) é a oferta de entrada mais acessível — um produto barato ou gratuito que apresenta o método a quem ainda não te conhece, antes de propor o acompanhamento completo. <strong>B2B</strong> (business-to-business) significa vender para empresas — no contexto da Natasha, oferecer workshops de gestão de estresse para organizações, em vez de atender apenas pessoas físicas.
+    </div>
+
+    <p style="text-align:center;font-style:italic;color:var(--text-mid);margin-top:1.5rem;">
+      "As ações de Fase 1 não exigem budget, equipe ou tecnologia. Exigem tempo e consistência. É exatamente aí que a solução a seguir entra."
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 5: A SOLUÇÃO -->
+<section id="solucao" style="background:var(--forest);padding:3rem 0;">
+  <div class="container">
+    <div class="section-label" style="color:var(--terra);">Seção 5</div>
+    <h2 style="color:var(--terra);margin-bottom:.3rem;">A Solução</h2>
+    <p style="color:var(--sand);font-size:.9rem;margin-bottom:2rem;">The Solution</p>
+
+    <p style="font-style:italic;color:var(--white);font-size:1rem;max-width:640px;margin-bottom:2rem;line-height:1.65;">
+      "O que encontramos mostra que a maior oportunidade é consistência de conteúdo — posts que explicam o método, que mostram autoridade, e que terminam com um CTA claro. O que propomos entrega exatamente isso."
+    </p>
+
+    <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem;">
+      <div style="display:flex;gap:.75rem;align-items:flex-start;">
+        <div style="color:var(--terra);font-size:1.1rem;flex-shrink:0;">✓</div>
+        <p style="color:var(--sand);margin:0;font-size:.95rem;"><strong style="color:var(--terra);">3 Carrosséis por semana</strong> (12/mês) — nos seus pilares, na sua voz, com os hooks certos para a sua audiência. Cada carrossel acompanha <strong style="color:var(--terra);">legenda completa</strong>: linguagem informativa, palavras-chave de SEO e hashtags estratégicas.</p>
+      </div>
+      <div style="display:flex;gap:.75rem;align-items:flex-start;">
+        <div style="color:var(--terra);font-size:1.1rem;flex-shrink:0;">✓</div>
+        <p style="color:var(--sand);margin:0;font-size:.95rem;"><strong style="color:var(--terra);">Script de Reels</strong> para cada carrossel: você recebe um roteiro pronto com hook de abertura, o que dizer e a duração ideal — só precisa gravar.</p>
+      </div>
+      <div style="display:flex;gap:.75rem;align-items:flex-start;">
+        <div style="color:var(--terra);font-size:1.1rem;flex-shrink:0;">✓</div>
+        <p style="color:var(--sand);margin:0;font-size:.95rem;"><strong style="color:var(--terra);">3 Stories por semana</strong> (12/mês) — imagens prontas para ampliar o alcance de cada carrossel.</p>
+      </div>
+      <div style="display:flex;gap:.75rem;align-items:flex-start;">
+        <div style="color:var(--terra);font-size:1.1rem;flex-shrink:0;">✓</div>
+        <p style="color:var(--sand);margin:0;font-size:.95rem;"><strong style="color:var(--terra);">Publicação automática</strong> pelo sistema — sem pensar, escrever ou agendar. Você aprova, grava o Reel quando quiser, e o sistema cuida do restante.</p>
+      </div>
+    </div>
+
+    <h3 style="color:var(--terra);margin-bottom:.875rem;">Antes e depois</h3>
+    <table style="margin-bottom:2rem;">
+      <thead>
+        <tr>
+          <th style="color:var(--terra);border-bottom:2px solid rgba(255,255,255,0.15);"></th>
+          <th style="color:var(--terra);border-bottom:2px solid rgba(255,255,255,0.15);">Antes</th>
+          <th style="color:var(--terra);border-bottom:2px solid rgba(255,255,255,0.15);">Com a Solução</th>
+        </tr>
+      </thead>
+      <tbody style="color:var(--sand);">
+        <tr style="background:rgba(255,255,255,.05);">
+          <td style="color:var(--sand);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.15);">Frequência</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);">Irregular (quando há tempo)</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);color:var(--terra);">4–5x por semana</td>
+        </tr>
+        <tr style="background:rgba(255,255,255,.05);">
+          <td style="color:var(--sand);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.15);">Consistência</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);">Quando sobra energia</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);color:var(--terra);">Automatizada</td>
+        </tr>
+        <tr style="background:rgba(255,255,255,.05);">
+          <td style="color:var(--sand);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.15);">Estratégia</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);">Intuitiva</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);color:var(--terra);">Baseada em dados reais do seu perfil</td>
+        </tr>
+        <tr style="background:rgba(255,255,255,.05);">
+          <td style="color:var(--sand);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.15);">Alcance</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);">~90% seguidores atuais</td>
+          <td style="border-bottom:1px solid rgba(255,255,255,0.15);color:var(--terra);">Crescimento orgânico ativo</td>
+        </tr>
+        <tr style="background:rgba(255,255,255,.05);">
+          <td style="color:var(--sand);font-weight:600;">Esforço da Natasha</td>
+          <td>Alto (cria, edita, posta, pensa)</td>
+          <td style="color:var(--terra);">Baixo (recebe, aprova, grava o Reel)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center;margin-bottom:1.75rem;">
+      <div style="display:inline-block;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius);padding:1.5rem 2.5rem;">
+        <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--terra);margin-bottom:.5rem;">Investimento mensal</div>
+        <div style="font-size:3rem;font-weight:800;color:white;line-height:1;">R$ 699<span style="font-size:1.25rem;font-weight:600;">,00</span></div>
+        <div style="font-size:.8rem;color:var(--sand);margin-top:.4rem;">por mês · sem fidelidade</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="https://wa.me/5521982043366" style="display:inline-block;background:var(--terra);color:white;text-decoration:none;padding:.875rem 2.5rem;border-radius:999px;font-weight:700;font-size:1rem;">
+        Vamos conversar?
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer style="background:var(--forest);border-top:1px solid rgba(255,255,255,0.15);padding:1.5rem;text-align:center;">
+  <p style="font-size:.75rem;color:var(--sand);margin:0;">Diagnóstico produzido por THE MARKETING BRAIN · Agência Bold · 2026-05-26</p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navPills = document.querySelectorAll('.nav-pill');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navPills.forEach(p => p.classList.remove('active'));
+        const active = document.querySelector(`.nav-pill[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => observer.observe(s));
+
+  function setActive(el) {
+    navPills.forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function showExame(tabId, btn) {
+    document.querySelectorAll('.etab-panel').forEach(p => p.classList.remove('etab-visible'));
+    document.querySelectorAll('.etab-btn').forEach(b => b.classList.remove('etab-active'));
+    document.getElementById('tab-' + tabId).classList.add('etab-visible');
+    btn.classList.add('etab-active');
+  }
+</script>
+</body>
+</html>
